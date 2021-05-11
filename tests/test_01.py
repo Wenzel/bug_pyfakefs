@@ -1,3 +1,4 @@
+import tempfile
 from pathlib import Path
 
 from pytest import fixture
@@ -11,7 +12,9 @@ def libcloud_local(fs):
     Path(key).mkdir(parents=True)
     cls = get_driver(Provider.LOCAL)
     driver = cls(key)
+    print(f'fixture: tmp dir before yield: {tempfile.gettempdir()} - exists:  {Path(tempfile.gettempdir()).exists()}')
     yield driver
+    print(f'fixture: tmp dir after yield: {tempfile.gettempdir()} - exists:  {Path(tempfile.gettempdir()).exists()}')
     # cleanup containers
     for container in driver.iterate_containers():
         driver.delete_container(container)
